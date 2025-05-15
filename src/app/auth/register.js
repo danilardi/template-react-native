@@ -3,14 +3,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { router } from 'expo-router';
 
-export default function Login() {
+export default function Register() {
+    const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleLogin = async () => {
+    const handleRegister = async () => {
         setLoading(true);
         // if (!email || !password) {
         //   setError('Please fill in all fields');
@@ -28,15 +29,22 @@ export default function Login() {
         // }
     }
 
-    const handleSignUp = () => {
-        router.replace('/auth/register');
+    const handleSignIn = () => {
+        router.replace('/auth/login');
     }
 
     return (
         <View className="flex-1 px-6 justify-center">
-            <Text className="text-3xl font-bold text-gray-900 font-circular-bold mb-8">Glad to meet you again!</Text>
+            <Text className="text-3xl font-bold text-gray-900 font-circular-bold mb-8">Sign up and starting to work!</Text>
 
             <View className="space-y-4">
+                <TextInput
+                    className="w-full h-14 mb-4 px-4 bg-gray-50 rounded-xl text-base text-gray-900"
+                    placeholder='Enter your full name'
+                    placeholderTextColor="#9ca3af"
+                    value={fullname}
+                    onChange={setFullname}
+                />
                 <TextInput
                     className="w-full h-14 mb-4 px-4 bg-gray-50 rounded-xl text-base text-gray-900"
                     placeholder='Enter your email'
@@ -69,19 +77,19 @@ export default function Login() {
                 ) : null}
                 <TouchableOpacity
                     className="w-full h-14 bg-emerald-900 rounded-xl justify-center items-center mb-4"
-                    onPress={handleLogin}
+                    onPress={handleRegister}
                     disabled={loading}>
                     {loading ? (
                         <ActivityIndicator color="#fff" />
                     ) : (
-                        <Text className="text-white text-[16px] font-semibold">Login</Text>
+                        <Text className="text-white text-[16px] font-semibold">Register</Text>
                     )}
                 </TouchableOpacity>
-                <Text className="text-center text-gray-800 mt-2"> Don't have an account?{' '}
+                <Text className="text-center text-gray-800 mt-2"> Already have an account?{' '}
                     <Text
-                        className="text-amber-400 font-semibold"
-                        onPress={handleSignUp}
-                    >Sign Up Now</Text>
+                        className="text-blue-400 font-semibold"
+                        onPress={handleSignIn}
+                    >Sign In Now</Text>
                 </Text>
             </View>
         </View>
