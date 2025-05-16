@@ -1,40 +1,52 @@
-import { loadFonts } from '../lib/font';
-import '../../global.css'
-import { View } from 'react-native';
-import { useEffect } from 'react';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { View, Text } from "react-native";
+import React, { useEffect } from "react";
+import { loadFonts } from "../lib/font";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import "../../global.css";
+import { ThemeProvider } from "../components/theme-provider";
+import Toast from "react-native-toast-message";
 
-export default function RootLayout() {
-    useEffect(() => {
-        async function prepare() {
-            try {
-                await loadFonts();
-            } catch (e) {
-                console.warn(e);
-            }
-        }
-        prepare();
-    }, [])
-    return (
-        <View style={{ flex: 1 }}>
-            <SafeAreaProvider>
-                <SafeAreaView style={{ flex: 1 }} edges={["bottom", "top"]}>
-                    <Stack
-                        screenOptions={{
-                            headerShown: false,
-                            statusBarBackgroundColor: '#fff',
-                            statusBarStyle: 'dark',
-                            contentStyle: {
-                                backgroundColor: '#f2f2f2',
-                            },
-                        }}
-                    >
-                        <StatusBar style='dark' />
-                    </Stack>
-                </SafeAreaView>
-            </SafeAreaProvider>
-        </View>
-    )
-}
+// import {}
+const RootLayout = () => {
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await loadFonts();
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  return (
+    <>
+      <View style={{ flex: 1 }}>
+        <ThemeProvider>
+          <SafeAreaProvider>
+            <SafeAreaView style={{ flex: 1 }} edges={["bottom", "top"]}>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  statusBarBackgroundColor: "fff",
+                  statusBarStyle: "dark",
+                  contentStyle: {
+                    backgroundColor: "#f2f2f2",
+                  },
+                }}
+              >
+                <StatusBar style="dark" />
+              </Stack>
+            </SafeAreaView>
+          </SafeAreaProvider>
+        </ThemeProvider>
+        <Toast />
+      </View>
+    </>
+  );
+};
+
+export default RootLayout;

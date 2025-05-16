@@ -1,97 +1,136 @@
-import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { useState } from 'react';
-import { router } from 'expo-router';
+import {
+  ActivityIndicator,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useEffect, useState } from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useRouter } from "expo-router";
+import api from "../../lib/api";
+import Toast from "react-native-toast-message";
 
 export default function Register() {
-    const [fullname, setFullname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [showPassword, setShowPassword] = useState(false);
+  const [fullname, setFullname] = useState("Danil");
+  const [email, setEmail] = useState("danilardi@gmail.com");
+  const [password, setPassword] = useState("danil123");
+  const [confPassword, setConfPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  //   const [showConfPassword, setShowConfPassword] = useState(false);
 
-    const handleRegister = async () => {
-        setLoading(true);
-        // if (!email || !password) {
-        //   setError('Please fill in all fields');
-        //   return;
-        // }
-        // setLoading(true);
-        // setError(null);
-        // try {
-        //   router.replace('/(main)')
-        // } catch (error) {
-        //   setError('Login failed. Please try again.');
-        //   console.error('Login error: ', error);
-        // } finally {
-        //   setLoading(false);
-        // }
+  const router = useRouter();
+
+  const handleRegister = async () => {
+    if (!fullname || !email || !password) {
+      setError("Please fill in all fields");
+      return;
     }
-
-    const handleSignIn = () => {
-        router.replace('/auth/login');
+    setLoading(true);
+    try {
+      const res = await api.post("/api/auth/register", {
+        name: fullname,
+        email,
+        password,
+      });
+      console.log(res.data);
+      router.back();
+    } catch (error) {
+      setError("Register failed, please try again");
+      console.error("Register error: ", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <View className="flex-1 px-6 justify-center">
-            <Text className="text-3xl font-bold text-gray-900 font-circular-bold mb-8">Sign up and starting to work!</Text>
+  const handleToSignIn = () => {
+    // router.replace("auth/login");
+    router.back();
+  };
 
-            <View className="space-y-4">
-                <TextInput
-                    className="w-full h-14 mb-4 px-4 bg-gray-50 rounded-xl text-base text-gray-900"
-                    placeholder='Enter your full name'
-                    placeholderTextColor="#9ca3af"
-                    value={fullname}
-                    onChange={setFullname}
-                />
-                <TextInput
-                    className="w-full h-14 mb-4 px-4 bg-gray-50 rounded-xl text-base text-gray-900"
-                    placeholder='Enter your email'
-                    placeholderTextColor="#9ca3af"
-                    value={email}
-                    onChange={setEmail}
-                />
-                <View className="flex-row items-center mb-4">
-                    <TextInput
-                        className="w-full h-14 px-4 bg-gray-50 rounded-xl text-base text-gray-900"
-                        placeholder='Enter your password'
-                        placeholderTextColor="#9ca3af"
-                        value={password}
-                        onChange={setPassword}
-                        secureTextEntry={!showPassword}
-                    />
-                    <TouchableOpacity
-                        onPress={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 justify-center items-center flex"
-                    >
-                        {showPassword ? (
-                            <Ionicons name="eye-off" size={24} color="#9ca3af" />
-                        ) : (
-                            <Ionicons name="eye" size={24} color="#9ca3af" />
-                        )}
-                    </TouchableOpacity>
-                </View>
-                {error ? (
-                    <Text className="text-red-500 text-center mb-4">{error}</Text>
-                ) : null}
-                <TouchableOpacity
-                    className="w-full h-14 bg-emerald-900 rounded-xl justify-center items-center mb-4"
-                    onPress={handleRegister}
-                    disabled={loading}>
-                    {loading ? (
-                        <ActivityIndicator color="#fff" />
-                    ) : (
-                        <Text className="text-white text-[16px] font-semibold">Register</Text>
-                    )}
-                </TouchableOpacity>
-                <Text className="text-center text-gray-800 mt-2"> Already have an account?{' '}
-                    <Text
-                        className="text-blue-400 font-semibold"
-                        onPress={handleSignIn}
-                    >Sign In Now</Text>
-                </Text>
-            </View>
+  const showToast = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Hello',
+      text2: 'This is some something 👋'
+    });
+  }
+
+  return (
+    <View className="flex-1 px-6 justify-center">
+      <Text className="text-3xl font-bold text-gray-900 font-circular-bold w-64 mb-8">
+        Become a new member!
+      </Text>
+      <View className="space-y-4">
+        <TextInput
+          className="w-full h-14 bg-gray-300/20 px-4 rounded-xl text-base text-gray-900"
+          placeholder="Your Fullname"
+          placeholderTextColor="#9ca3af"
+          value={fullname}
+          onChangeText={setFullname}
+        />
+        <TextInput
+          className="w-full h-14 bg-gray-300/20 px-4 rounded-xl text-base text-gray-900"
+          placeholder="Your Email"
+          placeholderTextColor="#9ca3af"
+          value={email}
+          keyboardType="email-address"
+          onChangeText={setEmail}
+          editable={!loading}
+        />
+        <View className="flex-row items-center">
+          <TextInput
+            className="w-full h-14 bg-gray-300/20 px-4 rounded-xl text-base text-gray-900"
+            placeholder="Enter your password"
+            placeholderTextColor="#9ca3af"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            editable={!loading}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            className="absolute right-4"
+          >
+            {showPassword ? (
+              <Ionicons name="eye-off" size={24} color="#9ca3af" />
+            ) : (
+              <Ionicons name="eye" size={24} color="#9ca3af" />
+            )}
+          </TouchableOpacity>
         </View>
-    );
+        {error ? (
+          <Text className="text-red-500 text-center mb-2">{error}</Text>
+        ) : null}
+        <Text className="text-center text-gray-700 text-sm mb-4">
+          By signing up you agree to our{" "}
+          <Text className="font-bold">Term of use</Text> and
+          <Text className="font-bold"> privacy notice</Text>
+        </Text>
+        <TouchableOpacity
+          className="w-full h-14 bg-emerald-900 rounded-xl items-center justify-center mb-4"
+          onPress={handleRegister}
+          disabled={loading}
+        >
+          <Text className="text-white font-semibold text-[16px]">
+            {loading ? (
+              <ActivityIndicator size="large" color="#fff" />
+            ) : (
+              <Text className="text-white font-semibold text-[16px]">
+                Register
+              </Text>
+            )}
+          </Text>
+        </TouchableOpacity>
+        <Text className="text-center text-gray-700">
+          Already have an account?{' '}
+          <Text onPress={handleToSignIn} className="text-amber-400 font-semibold">
+            Sign In Now
+          </Text>
+        </Text>
+      </View>
+    </View>
+  );
 }
