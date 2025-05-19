@@ -57,7 +57,7 @@ export default function Login() {
       <Text className="text-3xl font-bold text-gray-900 font-circular-bold w-64 mb-8">
         Glad to meet you again!
       </Text>
-      <View className="space-y-4">
+      <View className="gap-4">
         <TextInput
           className="w-full h-14 px-4 bg-gray-300/20 rounded-xl text-base text-gray-900"
           placeholder="Your Email"
@@ -66,7 +66,7 @@ export default function Login() {
           keyboardType="email-address"
           onChangeText={setEmail}
         />
-        <View className="flex-row items-center mb-8">
+        <View className="flex-row items-center">
           <TextInput
             className="w-full h-14 px-4 bg-gray-300/20 rounded-xl text-base text-gray-900"
             placeholder="Enter your password"
@@ -90,7 +90,7 @@ export default function Login() {
           <Text className="text-red-500 text-center mb-2">{error}</Text>
         ) : null}
         <TouchableOpacity
-          className="w-full h-14 bg-slate-800 rounded-xl items-center justify-center mb-4"
+          className="w-full h-14 bg-emerald-900 rounded-xl items-center justify-center mb-4"
           onPress={handleSignIn}
           disabled={loading}
         >

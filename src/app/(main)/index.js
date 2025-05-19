@@ -2,7 +2,8 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { useRouter } from "expo-router";
 import ThemeToggle from "../../components/theme-toggle";
-import { getAccessToken } from "../../lib/auth";
+import { getAccessToken, removeAccessToken } from "../../lib/auth";
+import { showToast } from "../../lib/utils";
 
 const Main = () => {
   const router = useRouter();
@@ -10,7 +11,10 @@ const Main = () => {
   useEffect(() => {
     getAccessToken()
       .then((token) => {
-        router.replace("/auth/login");
+        if (!token) {
+          showToast("Access Denied", "Please log in to continue.", "error");
+          router.replace("/auth/login");
+        }
       })
       .catch((error) => {
         console.error("Error checking access token:", error);
@@ -19,7 +23,15 @@ const Main = () => {
   }, [router]);
 
   const handleLogout = () => {
-    router.replace("/auth/login");
+    removeAccessToken()
+      .then(() => {
+        showToast("Logout Successful", "You have been logged out.", "success");
+        router.replace("/auth/login");
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+        showToast("Logout Failed", "Please try again later.", "error");
+      });
   };
 
   return (
